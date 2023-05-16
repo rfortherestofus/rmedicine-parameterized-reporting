@@ -1,0 +1,42 @@
+---
+title: "Total Admissions Over Time"
+format: 
+  html:
+    embed-resources: true
+    css: css/styles.css
+execute: 
+  echo: false
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(NHSRdatasets)
+```
+
+This chart shows the total admissions over time at RF4.
+
+```{r}
+ae_attendances %>% 
+  filter(org_code == "RF4") %>% 
+  summarize(total_admissions = sum(admissions),
+            .by = period) %>% 
+  ggplot(aes(x = period,
+             y = total_admissions)) +
+  geom_line(alpha = 0.9,
+            color = "#005EB8") +
+  geom_area(alpha = 0.5,
+            fill = "#005EB8") +
+  theme_minimal(base_family = "Frutiger") +
+  theme(plot.title = element_text(face = "bold"),
+        plot.title.position = "plot",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank())
+```
+
+

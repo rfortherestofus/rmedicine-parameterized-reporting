@@ -1,0 +1,99 @@
+---
+title: "From One Report, Many"
+subtitle: "Using Parameterized Reporting to Generate<br>Dozens, Hundreds, or Thousands of Reports<br>at the Same Time"
+author: "David Keyes // R for the Rest of Us"
+format: 
+  revealjs:
+    theme: css/slides-style.scss
+    menu: false
+    progress: false
+    slide-number: false
+    show-slide-number: print
+    embed-resources: true
+    center: true
+    incremental: true
+execute: 
+  message: false
+  warning: false
+  cache: false
+title-slide-attributes:
+  data-background-image: "assets/rru-hex-bg-gradient-dark.svg"
+  data-background-size: cover
+---
+
+# About Me
+
+---
+
+:::{.center-slide}
+![](assets/dk-headshot-round.jpg)
+:::
+
+# Why Parameterized Reporting?
+
+---
+
+:::{.center-slide}
+![](assets/us.svg)
+:::
+
+---
+
+
+![](assets/census-report.png)
+
+
+---
+
+
+![](assets/ors-census-imagine.png)
+
+
+# How Parameterized Reporting Works
+
+# Make a Report for One Location
+
+---
+
+
+![](assets/report.svg)
+
+
+# Add a Parameter to Our Report
+
+---
+
+![](assets/report-param.svg)
+
+# Manually Render One Report 
+
+---
+
+![](assets/render.svg)
+
+# Manually Render Multiple Reports
+
+---
+
+![](assets/report-param-two.svg)
+
+# Semi-Manually Render Report with R Script File
+
+---
+
+![](assets/render-one-report.svg)
+
+# Automatically Render Multiple Reports with R Script File
+
+---
+
+![](assets/render-multiple-reports.svg)
+
+# Summary
+
+1. Create report
+1. Add parameter to report
+1. Create render.R script file
+1. Create function to render one report
+1. Create vector of all locations
+1. Use vector of all locations combined with `walk()` to render all reports
