@@ -96,4 +96,5 @@ title-slide-attributes:
 1. Create render.R script file
 1. Create function to render one report
 1. Create vector of all locations
-1. Use vector of all locations combined with `walk()` to render all reports
+1. Create tibble with information about all reports
+1. Use reports tibble to render all reports
