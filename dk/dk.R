@@ -19,5 +19,12 @@ reports <- tibble(
 )
 
 # Generate all of our reports
-reports %>%
+reports %>% 
   walk(quarto_render)
+
+
+library(pagedown)
+
+chrome_print(input = "slides/slides.html",
+             output = "slides/parameterized-reporting-slides.pdf",
+             timeout = 180)
