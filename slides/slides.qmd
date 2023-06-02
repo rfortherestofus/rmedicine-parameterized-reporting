@@ -31,10 +31,28 @@ title-slide-attributes:
 
 # Why Parameterized Reporting?
 
+## Making multiple reports is tedious
+
+## Making multiple reports is error-prone
+
+::: {.notes}
+Talk about OCF reports
+:::
+
+## Making multiple reports is often not feasible
+
+
+# Parameterized Reporting Changes Everything
+
 ---
 
 :::{.center-slide}
 ![](assets/us.svg)
+:::
+
+::: {.notes}
+I've had to do same thing with R for the Rest of Us
+Folks came to us to make one report for each state
 :::
 
 ---
@@ -47,16 +65,138 @@ title-slide-attributes:
 
 
 ![](assets/ors-census-imagine.png)
+---
+
+## Or Imagine Having to Make One Report for Each NHS Trust in England
+
+
+```{r}
+library(tidyverse)
+library(NHSRdatasets)
+
+ae_attendances %>% 
+  distinct(org_code, .keep_all = TRUE) %>% 
+  select(org_code, admissions) %>% 
+  print(n = 274)
+```
+
+# Parameterized Reporting is the Solution
 
 
 # How Parameterized Reporting Works
+
+# Make a Report
+
+---
+
+![](assets/report.svg)
+
+---
+
+````{verbatim}
+---
+title: "Total Admissions Over Time"
+format: 
+  html:
+    embed-resources: true
+    css: styles.css
+execute: 
+  echo: false
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(NHSRdatasets)
+library(scales)
+```
+
+This chart shows total admissions over time in all NHS trusts.
+
+```{r}
+ae_attendances %>% 
+  summarize(total_admissions = sum(admissions),
+            .by = period) %>% 
+  ggplot(aes(x = period,
+             y = total_admissions)) +
+  geom_line(alpha = 0.9,
+            color = "#005EB8") +
+  geom_area(alpha = 0.5,
+            fill = "#005EB8") +
+  scale_y_continuous(labels = comma_format()) +
+  theme_minimal(base_family = "Frutiger") +
+  theme(plot.title = element_text(face = "bold"),
+        plot.title.position = "plot",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank())
+```
+````
+
+
+# Manually Render One Report 
+
+---
+
+![](assets/render.svg)
 
 # Make a Report for One Location
 
 ---
 
+![](assets/report-one-location.svg)
 
-![](assets/report.svg)
+---
+
+
+````{verbatim}
+---
+title: "Total Admissions Over Time"
+format: 
+  html:
+    embed-resources: true
+    css: styles.css
+execute: 
+  echo: false
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+library(tidyverse)
+library(NHSRdatasets)
+library(scales)
+```
+
+This chart shows total admissions over time at RF4.
+
+```{r}
+ae_attendances %>% 
+  filter(org_code == "RF4") %>% 
+  summarize(total_admissions = sum(admissions),
+            .by = period) %>% 
+  ggplot(aes(x = period,
+             y = total_admissions)) +
+  geom_line(alpha = 0.9,
+            color = "#005EB8") +
+  geom_area(alpha = 0.5,
+            fill = "#005EB8") +
+  scale_y_continuous(labels = comma_format()) +
+  theme_minimal(base_family = "Frutiger") +
+  theme(plot.title = element_text(face = "bold"),
+        plot.title.position = "plot",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank())
+```
+````
 
 
 # Add a Parameter to Our Report
@@ -65,11 +205,57 @@ title-slide-attributes:
 
 ![](assets/report-param.svg)
 
-# Manually Render One Report 
-
 ---
 
-![](assets/render.svg)
+````{verbatim}
+---
+title: "Total Admissions Over Time"
+format: 
+  html:
+    embed-resources: true
+    css: styles.css
+execute: 
+  echo: false
+  warning: false
+  message: false
+editor_options: 
+  chunk_output_type: console
+params:
+  location: "RF4"
+---
+
+```{r}
+library(tidyverse)
+library(NHSRdatasets)
+library(scales)
+```
+
+This chart shows total admissions over time at `r params$location`.
+
+```{r}
+ae_attendances %>% 
+  filter(org_code == params$location) %>% 
+  summarize(total_admissions = sum(admissions),
+            .by = period) %>% 
+  ggplot(aes(x = period,
+             y = total_admissions)) +
+  geom_line(alpha = 0.9,
+            color = "#005EB8") +
+  geom_area(alpha = 0.5,
+            fill = "#005EB8") +
+  scale_y_continuous(labels = comma_format()) +
+  theme_minimal(base_family = "Frutiger") +
+  theme(plot.title = element_text(face = "bold"),
+        plot.title.position = "plot",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        axis.title = element_blank(),
+        axis.ticks = element_blank())
+```
+````
+
+
+# Manually Render the Report (Again)
 
 # Manually Render Multiple Reports
 
@@ -83,18 +269,87 @@ title-slide-attributes:
 
 ![](assets/render-one-report.svg)
 
+
+---
+
+```{r}
+#| eval: false
+#| echo: true
+
+library(quarto)
+
+quarto_render(
+  input = "report.qmd",
+  output_file = "RF4.html",
+  execute_params = list(location = "RF4")
+)
+```
+
 # Automatically Render Multiple Reports with R Script File
 
 ---
 
 ![](assets/render-multiple-reports.svg)
 
+---
+
+```{r}
+#| eval: false
+#| echo: true
+
+# Load packages
+library(tidyverse)
+library(NHSRdatasets)
+library(quarto)
+
+# Create a vector of all locations
+locations <- ae_attendances %>%
+  distinct(org_code) %>% 
+  mutate(org_code = as.character(org_code)) %>% 
+  pull(org_code) 
+
+# Create a tibble with information on the:
+# input R Markdown document
+# output HTML file
+# parameters needed to knit the document
+reports <- tibble(
+  input = "report.qmd",
+  output_file = str_glue("{locations}.html"),
+  execute_params = map(locations, ~list(location = .))
+)
+
+# Use the tibble to generate all of our reports
+pwalk(reports, quarto_render)
+```
+
+
 # Summary
 
 1. Create report
 1. Add parameter to report
 1. Create render.R script file
-1. Create function to render one report
 1. Create vector of all locations
 1. Create tibble with information about all reports
 1. Use reports tibble to render all reports
+
+# Learn More
+
+[Chapter from R Without Statistics ➜](https://book.rwithoutstatistics.com/parameterized-reports-chapter.html)
+
+---
+
+:::{.center-slide}
+[![](assets/state-fiscal-briefs.png)](https://www.urban.org/policy-centers/cross-center-initiatives/state-and-local-finance-initiative/projects/state-fiscal-briefs)
+:::
+
+# Don't Do It By Hand, Use Parameterized Reporting
+
+- Less tedious
+
+- Less error-prone
+
+- Makes it possible to generate reports that would not otherwise be feasible
+
+# Questions?
+
+Ask in the chat or by email: david@rfortherestofus.com

@@ -6,6 +6,7 @@ library(quarto)
 # Create a vector of all locations
 locations <- ae_attendances %>%
   distinct(org_code) %>% 
+  mutate(org_code = as.character(org_code)) %>% 
   pull(org_code) 
 
 # Create a tibble with information on the:
@@ -18,9 +19,9 @@ reports <- tibble(
   execute_params = map(locations, ~list(location = .))
 )
 
-# Generate all of our reports
+# Use the tibble to generate all of our reports
 reports %>% 
-  walk(quarto_render)
+  pwalk(quarto_render)
 
 
 library(pagedown)

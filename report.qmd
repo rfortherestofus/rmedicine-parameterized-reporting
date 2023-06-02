@@ -3,25 +3,29 @@ title: "Total Admissions Over Time"
 format: 
   html:
     embed-resources: true
-    css: css/styles.css
+    css: styles.css
 execute: 
   echo: false
   warning: false
   message: false
 editor_options: 
   chunk_output_type: console
+params:
+  location: "R1H"
 ---
 
 ```{r}
 library(tidyverse)
 library(NHSRdatasets)
+library(scales)
 ```
 
-This chart shows the total admissions over time at RF4.
+
+This chart shows total admissions over time at `r params$location`.
 
 ```{r}
 ae_attendances %>% 
-  filter(org_code == "RF4") %>% 
+  filter(org_code == params$location) %>% 
   summarize(total_admissions = sum(admissions),
             .by = period) %>% 
   ggplot(aes(x = period,
@@ -30,6 +34,7 @@ ae_attendances %>%
             color = "#005EB8") +
   geom_area(alpha = 0.5,
             fill = "#005EB8") +
+  scale_y_continuous(labels = comma_format()) +
   theme_minimal(base_family = "Frutiger") +
   theme(plot.title = element_text(face = "bold"),
         plot.title.position = "plot",
@@ -38,5 +43,3 @@ ae_attendances %>%
         axis.title = element_blank(),
         axis.ticks = element_blank())
 ```
-
-
