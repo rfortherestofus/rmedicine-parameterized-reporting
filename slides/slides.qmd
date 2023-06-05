@@ -31,16 +31,15 @@ title-slide-attributes:
 
 # Why Parameterized Reporting?
 
-## Making multiple reports is tedious
-
-## Making multiple reports is error-prone
-
 ::: {.notes}
 Talk about OCF reports
 :::
 
-## Making multiple reports is often not feasible
+## Making multiple reports is tedious
 
+## Making multiple reports is error-prone
+
+## Making multiple reports is often not feasible
 
 # Parameterized Reporting Changes Everything
 
@@ -52,6 +51,7 @@ Talk about OCF reports
 
 ::: {.notes}
 I've had to do same thing with R for the Rest of Us
+
 Folks came to us to make one report for each state
 :::
 
@@ -82,7 +82,6 @@ ae_attendances %>%
 
 # Parameterized Reporting is the Solution
 
-
 # How Parameterized Reporting Works
 
 # Make a Report
@@ -90,6 +89,10 @@ ae_attendances %>%
 ---
 
 ![](assets/report.svg)
+
+::: {.notes}
+Go over Quarto basics
+:::
 
 ---
 
@@ -137,8 +140,12 @@ ae_attendances %>%
 ```
 ````
 
+::: {.notes}
+Show how chart works
+:::
 
-# Manually Render One Report 
+
+# Manually Render One Report
 
 ---
 
@@ -199,6 +206,12 @@ ae_attendances %>%
 ````
 
 
+::: {.notes}
+You could change RF4 by hand, but it would take forever
+
+Let's show a simpler way
+:::
+
 # Add a Parameter to Our Report
 
 ---
@@ -254,16 +267,34 @@ ae_attendances %>%
 ```
 ````
 
+::: {.notes}
+This isn't yet simpler than adding RF4, but it will become simpler
+:::
+
 
 # Manually Render the Report (Again)
 
+::: {.notes}
+Parameters replace hard-coded text
+
+We need this because we're going to programatically render reports
+:::
+
 # Manually Render Multiple Reports
+
+::: {.notes}
+This is fine for a few reports, but not for 274
+:::
 
 ---
 
 ![](assets/report-param-two.svg)
 
 # Semi-Manually Render Report with R Script File
+
+::: {.notes}
+In order to automate this, we need to render reports without us hitting any buttons
+:::
 
 ---
 
@@ -284,6 +315,10 @@ quarto_render(
   execute_params = list(location = "RF4")
 )
 ```
+
+::: {.notes}
+Show arguments one by one
+:::
 
 # Automatically Render Multiple Reports with R Script File
 
@@ -322,6 +357,14 @@ reports <- tibble(
 pwalk(reports, quarto_render)
 ```
 
+::: {.notes}
+Show how we can create reports tibble to use with pwalk to render reports
+
+Explain pull function to make vector
+
+Explain map function to make list column
+:::
+
 
 # Summary
 
@@ -335,6 +378,8 @@ pwalk(reports, quarto_render)
 # Learn More
 
 [Chapter from R Without Statistics ➜](https://book.rwithoutstatistics.com/parameterized-reports-chapter.html)
+
+[GitHub Repository ➜](https://github.com/rfortherestofus/rmedicine-parameterized-reporting)
 
 ---
 

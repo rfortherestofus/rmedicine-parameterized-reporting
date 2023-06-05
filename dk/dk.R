@@ -15,20 +15,25 @@ locations <- ae_attendances %>%
 # parameters needed to knit the document
 reports <- 
   tibble(
-  input = "report.qmd",
-  output_file = str_glue("{locations}.html"),
-  execute_params = map2(locations, locations, ~list(location = .x,
-                                                    test = .y)))
+    input = "report.qmd",
+    output_file = str_glue("{locations}.html"),
+    execute_params = map2(locations, locations, ~list(location = .x,
+                                                      test = .y)))
+
+reports <-
+  tibble(
+    input = "report.qmd",
+    output_file = str_glue("{locations}.html")) 
+
+pwalk(reports, quarto_render)
+
+reports <- 
+  tibble(
+    input = "report.qmd",
+    output_file = str_glue("{locations}.html"),
+    execute_params = map(locations, ~list(location = .)))
 
 
-
-
-
-test <- tibble(Name = c(rep("TestA", 3), rep("TestB", 4), rep("TestC", 2)))
-conversion <- tibble(Original = c("TestA", "TestB", "TestC"), New = c("380", "JK", "LOL"))
-
-test %>% 
-  left_join(conversion, by = c("Name" = "Original"))
 
 # Use the tibble to generate all of our reports
 reports %>% 
