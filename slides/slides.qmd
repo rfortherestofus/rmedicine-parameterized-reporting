@@ -23,6 +23,10 @@ title-slide-attributes:
 
 # About Me
 
+::: {.notes}
+http://parameterizedreporting.rfortherestofus.com/slides.html
+:::
+
 ---
 
 :::{.center-slide}
