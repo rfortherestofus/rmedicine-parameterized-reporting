@@ -21,7 +21,9 @@ library(scales)
 ```
 
 
+
 This chart shows total admissions over time at `r params$location`.
+
 
 ```{r}
 ae_attendances %>% 
